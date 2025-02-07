@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administracion de Pagina</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background-image: url('1.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        header {
+            background-color: #429edc;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+        .admin-info {
+            margin: 20px 0;
+        }
+        .admin-info h2 {
+            font-size: 2rem;
+            color: #333;
+        }
+        .admin-info p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        button {
+            width: 80%;
+            max-width: 300px;
+            padding: 15px;
+            background-color: #0094D2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+        }
+        button:hover {
+            background-color: #007bb5;
+        }
+        .popup {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 800px;
+        }
+        .popup h3 {
+            margin-top: 0;
+        }
+        .close-btn, .save-btn {
+            background-color: #0094D2;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 5px;
+        }
+        .close-btn:hover, .save-btn:hover {
+            background-color: #007bb5;
+        }
+        .close-btn {
+            background-color: #ff4d4d;
+        }
+        .close-btn:hover {
+            background-color: #cc0000;
+        }
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Administracion de Pagina</h1>
+    </header>
+    <main>
+        <div class="admin-info">
+            <h2>Administradores</h2>
+            <p>Nahuel Leguizamon - Esteban Gramajo</p>
+        </div>
+        <div class="button-container">
+            <button onclick="togglePopup('popup-login', 'login.html')">Gestionar Login</button>
+            <div id="popup-login" class="popup">
+                <h3>Gestionar Login</h3>
+                <iframe id="iframe-login" src="login.html"></iframe>
+                <button class="save-btn" onclick="enableEditing('iframe-login')">Habilitar Edición</button>
+                <button class="save-btn" onclick="saveEdits('iframe-login', 'login.html')">Guardar Cambios</button>
+                <button class="close-btn" onclick="closePopup('popup-login')">Cerrar</button>
+            </div>
+
+            <button onclick="togglePopup('popup-index', 'index.html')">Gestionar Página Principal (Index)</button>
+            <div id="popup-index" class="popup">
+                <h3>Gestionar Página Principal</h3>
+                <iframe id="iframe-index" src="index.html"></iframe>
+                <button class="save-btn" onclick="enableEditing('iframe-index')">Habilitar Edición</button>
+                <button class="save-btn" onclick="saveEdits('iframe-index', 'index.html')">Guardar Cambios</button>
+                <button class="close-btn" onclick="closePopup('popup-index')">Cerrar</button>
+            </div>
+
+            <button onclick="togglePopup('popup-mesa', 'mesa_entrada.html')">Gestionar Mesa de Entrada</button>
+            <div id="popup-mesa" class="popup">
+                <h3>Gestionar Mesa de Entrada</h3>
+                <iframe id="iframe-mesa" src="Mesa de Entrada.html"></iframe>
+                <button class="save-btn" onclick="enableEditing('iframe-mesa')">Habilitar Edición</button>
+                <button class="save-btn" onclick="saveEdits('iframe-mesa', 'mesa_entrada.html')">Guardar Cambios</button>
+                <button class="close-btn" onclick="closePopup('popup-mesa')">Cerrar</button>
+            </div>
+
+            <button onclick="togglePopup('popup-catastro', 'catastro.html')">Gestionar Catastro</button>
+            <div id="popup-catastro" class="popup">
+                <h3>Gestionar Catastro</h3>
+                <iframe id="iframe-catastro" src="Catastro.html"></iframe>
+                <button class="save-btn" onclick="enableEditing('iframe-catastro')">Habilitar Edición</button>
+                <button class="save-btn" onclick="saveEdits('iframe-catastro', 'catastro.html')">Guardar Cambios</button>
+                <button class="close-btn" onclick="closePopup('popup-catastro')">Cerrar</button>
+            </div>
+        </div>
+    </main>
+    <script>
+        function togglePopup(id, file) {
+            const popups = document.querySelectorAll('.popup');
+            popups.forEach(popup => {
+                if (popup.id !== id) {
+                    popup.style.display = 'none';
+                }
+            });
+
+            const popup = document.getElementById(id);
+            popup.style.display = (popup.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function closePopup(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function enableEditing(iframeId) {
+            const iframe = document.getElementById(iframeId);
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDocument.body.contentEditable = true;
+            iframeDocument.designMode = 'on';
+            alert('Modo de edición habilitado. Puedes hacer clic y editar el contenido.');
+        }
+
+        function saveEdits(iframeId, fileName) {
+            const iframe = document.getElementById(iframeId);
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            const content = iframeDocument.documentElement.outerHTML;
+
+            fetch(fileName, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content })
+            }).then(response => {
+                if(response.ok) {
+                    alert('Cambios guardados exitosamente');
+                } else {
+                    alert('Error al guardar los cambios');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

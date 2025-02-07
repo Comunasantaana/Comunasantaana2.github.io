@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesa de entrada CRSA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url('1.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+        }
+        .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    .header-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* Ajusta el espacio entre las imágenes */
+}
+}
+
+h1 {
+    background-color: #429edc(0, 123, 255, 0.7); /* Azul con 70% de opacidad */
+    padding: 20px;
+    color: black;
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+
+
+        .header-image {
+    width: auto;
+    height: 80px;
+    max-width: 250px; /* Ajusta según sea necesario */
+    object-fit: contain; /* Mantiene la proporción sin deformar */
+}
+
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #search-input {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        #search-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 10px 20px;
+            background-color: #0094D2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #search-button:hover {
+            background-color: #0094D2;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+            background-color: transparent;
+        }
+        th {
+            background-color: #0094D2;
+            color: white;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+        .prioridad-urgente {
+    color: white;
+    background-color: red;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+.prioridad-moderado {
+    color: black;
+    background-color: orange;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+.prioridad-normal {
+    color: white;
+    background-color: green;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+/* Línea punteada debajo del último campo */
+.separator {
+    border-top: 2px dashed #000;
+    margin-top: 10px;
+    padding-top: 5px;
+}
+
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <header>
+        <div style="position: absolute; top: 20px; left: 20px;">
+            <button onclick="window.location.href='index.html'" 
+                style="display: flex; align-items: center; background-color: #007BFF; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+                <i class="fas fa-arrow-left" style="margin-right: 5px;"></i> Volver
+            </button>
+        </div>
+        
+        <div class="header-container">
+            <div class="header-images">
+                <img src="2.png" alt="Imagen 1" class="header-image">
+                <img src="ministerio.png" alt="Imagen 2" class="header-image">
+            </div>
+            <h1>Mesa de Entrada CRSA</h1>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Buscar registros..." />
+            <button id="search-button">Buscar</button>
+        </div>
+        <div style="text-align: right; margin: 10px;">
+            <button id="logout-button" style="background-color: #dc3545; padding: 10px; border: none; color: white; border-radius: 4px;">Cerrar sesión</button>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>Gestión de Registros</h2>
+            <form id="record-form">
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <input type="number" id="nro-de-Orden" placeholder="Nro de Orden" required />
+                    <input type="text" id="nombre" placeholder="Nombre y Apellido" required />
+                    <input type="number" id="dni" placeholder="DNI" required />
+                    <input type="text" id="tipo-tramite" placeholder="Tipo de Trámite" required />
+                    <input type="text" id="descripcion" placeholder="Detalle o Descripción" required />
+                    <input type="text" id="barrio" placeholder="Barrio" required />
+                    <input type="number" id="nro-telefono" placeholder="Nro Teléfono" required />
+                    <select id="prioridad" required>
+                        <option value="" disabled selected>Prioridad</option>
+                        <option value="Urgente">Urgente</option>
+                        <option value="Moderado">Moderado</option>
+                        <option value="Normal">Normal</option>
+                    </select>
+                    <select id="coordinador" required>
+                        <option value="" disabled selected>Coordinador</option>
+                        <option value="Favio Diaz">Favio Diaz</option>
+                        <option value="Matias Plaza">Matias Plaza</option>
+                        <option value="Hernan Diaz">Hernan Diaz</option>
+                        <option value="Veronica Velardez">Veronica Velardez</option>
+                        <option value="Habilitacion">Habilitacion</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Catastro">Catastro</option>
+                    </select>
+                    <button type="submit" style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Agregar Registro</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="records-table">
+            <!-- Aquí se mostrarán los registros organizados por mes y año -->
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Comuna Rural Santa Ana - Ingenio del conocimiento</p>
+    </footer>
+
+    <script>
+        let registros = JSON.parse(localStorage.getItem('registros')) || [];
+        let registrosFiltrados = [...registros];
+
+        function obtenerNombreMes(mes) {
+            const meses = [
+                'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+            ];
+            return meses[mes];
+        }
+
+        function exportarMes(mesAnio, registros) {
+            const ws = XLSX.utils.json_to_sheet(registros);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, mesAnio);
+            XLSX.writeFile(wb, `${mesAnio}.xlsx`);
+        }
+
+        function mostrarRegistros() {
+    const recordsTable = document.getElementById('records-table');
+    recordsTable.innerHTML = '';
+
+    if (registrosFiltrados.length === 0) {
+        recordsTable.innerHTML = '<p>No hay registros para mostrar.</p>';
+        return;
+    }
+
+    const registrosPorMes = registrosFiltrados.reduce((acc, registro) => {
+        const fecha = new Date(registro.fechaHora);
+        const mesAnio = `${obtenerNombreMes(fecha.getMonth())} ${fecha.getFullYear()}`;
+        if (!acc[mesAnio]) acc[mesAnio] = [];
+        acc[mesAnio].push(registro);
+        return acc;
+    }, {});
+
+    const mesesOrdenados = Object.keys(registrosPorMes).sort((a, b) => {
+        const [mesA, anioA] = a.split(' ');
+        const [mesB, anioB] = b.split(' ');
+
+        const meses = {
+            'Enero': 0, 'Febrero': 1, 'Marzo': 2, 'Abril': 3, 'Mayo': 4, 'Junio': 5,
+            'Julio': 6, 'Agosto': 7, 'Septiembre': 8, 'Octubre': 9, 'Noviembre': 10, 'Diciembre': 11
+        };
+
+        const fechaA = parseInt(anioA) * 100 + meses[mesA];
+        const fechaB = parseInt(anioB) * 100 + meses[mesB];
+
+        return fechaB - fechaA; // Meses más recientes primero
+    });
+
+    mesesOrdenados.forEach(mesAnio => {
+        const mesAnioDiv = document.createElement('div');
+        const mesAnioTitle = document.createElement('h3');
+        mesAnioTitle.innerText = mesAnio;
+
+        const exportButton = document.createElement('button');
+        exportButton.innerText = 'Exportar';
+        exportButton.style.marginLeft = '10px';
+        exportButton.style.padding = '5px 10px';
+        exportButton.style.borderRadius = '5px';
+        exportButton.style.cursor = 'pointer';
+        exportButton.onclick = () => exportarMes(mesAnio, registrosPorMes[mesAnio]);
+
+        const table = document.createElement('table');
+        const headerRow = document.createElement('tr');
+        headerRow.innerHTML = `
+            <th>Fecha</th>
+            <th>Nro de Orden</th>
+            <th>Nombre</th>
+            <th>DNI</th>
+            <th>Tipo de Trámite</th>
+            <th>Detalle o Descripción</th>
+            <th>Barrio</th>
+            <th>Teléfono</th>
+            <th>Prioridad</th>
+            <th>Coordinador</th>
+            
+        `;
+        table.appendChild(headerRow);
+
+        // Ordenar registros dentro del mes (más recientes primero)
+        const registrosOrdenados = registrosPorMes[mesAnio].sort((a, b) => {
+            const fechaA = new Date(a.fechaHora);
+            const fechaB = new Date(b.fechaHora);
+            return fechaB - fechaA; // Más recientes primero
+        });
+
+        registrosOrdenados.forEach(registro => {
+            const row = document.createElement('tr');
+    const prioridadClase = registro.prioridad === 'Urgente' ? 'prioridad-urgente' :
+                           registro.prioridad === 'Moderado' ? 'prioridad-moderado' : 'prioridad-normal';
+            row.innerHTML = `
+                <td>${new Date(registro.fechaHora).toLocaleDateString()}</td>
+                <td>${registro.nroOrden}</td>
+                <td>${registro.nombre}</td>
+                <td>${registro.dni}</td>
+                <td>${registro.tipoTramite}</td>
+                <td>${registro.descripcion || ''}</td>
+                <td>${registro.barrio}</td>
+                <td>${registro.nroTelefono}</td>
+                <td>${registro.prioridad}</td>
+                <td>${registro.coordinador}</td>
+                <td><button onclick="editarRegistro('${registro.nroOrden}')">Editar</button></td>
+                <td><button onclick="eliminarRegistro('${registro.nroOrden}')">Borrar</button></td>
+                <td><button onclick="imprimirRegistro('${registro.nroOrden}')" title="Imprimir" style="background: none; border: none; cursor: pointer;">
+        <i class="fas fa-print"></i>
+    </button>
+</td>
+
+
+            `;
+            table.appendChild(row);
+        });
+
+        mesAnioDiv.appendChild(mesAnioTitle);
+        mesAnioDiv.appendChild(exportButton);
+        mesAnioDiv.appendChild(table);
+        recordsTable.appendChild(mesAnioDiv);
+    });
+}
+function imprimirRegistro(nroOrden) {
+    const registro = registros.find(r => r.nroOrden == nroOrden);
+    if (!registro) {
+        console.error("Registro no encontrado");
+        return;
+    }
+
+    document.getElementById('print-fecha').innerText = new Date(registro.fechaHora).toLocaleDateString();
+    document.getElementById('print-nroOrden').innerText = registro.nroOrden;
+    document.getElementById('print-nombre').innerText = registro.nombre;
+    document.getElementById('print-dni').innerText = registro.dni;
+    document.getElementById('print-detalle').innerText = registro.descripcion;
+    document.getElementById('print-modal').style.display = 'block';
+}
+
+function cerrarModal() {
+    document.getElementById('print-modal').style.display = 'none';
+}
+
+function imprimirDatos() {
+    const contenido = document.getElementById('print-content').innerHTML;
+    const ventana = window.open('', '', 'width=600,height=400');
+    ventana.document.write(`<html><head><title>Impresión</title></head><body>${contenido}</body></html>`);
+    ventana.document.close();
+    ventana.print();
+}
+
+
+function editarRegistro(nroOrden) {
+    const modal = document.getElementById('edit-modal');
+    modal.style.display = 'block';
+
+    const registro = registros.find(r => r.nroOrden == nroOrden);
+
+    if (!registro) {
+        console.error('Registro no encontrado:', nroOrden);
+        return;
+    }
+
+    const campos = [
+        { id: 'nro-de-Orden', key: 'nroOrden' },
+        { id: 'nombre', key: 'nombre' },
+        { id: 'dni', key: 'dni' },
+        { id: 'tipo-tramite', key: 'tipoTramite' },
+        { id: 'descripcion', key: 'descripcion' },
+        { id: 'barrio', key: 'barrio' },
+        { id: 'nro-telefono', key: 'nroTelefono' },
+        { id: 'prioridad', key: 'prioridad' },
+        { id: 'coordinador', key: 'coordinador' }
+    ];
+
+    campos.forEach(({ id, key }) => {
+        const input = document.getElementById(`edit-${id}`);
+        input.value = registro[key] || '';
+    });
+
+    document.getElementById('edit-form').onsubmit = function (event) {
+        event.preventDefault();
+        campos.forEach(({ id, key }) => {
+            registro[key] = document.getElementById(`edit-${id}`).value;
+        });
+        localStorage.setItem('registros', JSON.stringify(registros));
+        mostrarRegistros();
+        modal.style.display = 'none';
+    };
+
+    // Salir con Escape y Guardar con Enter
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            modal.style.display = 'none';
+        } else if (event.key === 'Enter') {
+            document.getElementById('edit-form').dispatchEvent(new Event('submit'));
+        }
+    });
+}
+
+
+
+
+
+function eliminarRegistro(nroOrden) {
+    // Buscar el índice del registro con el nroOrden proporcionado
+    const index = registros.findIndex(r => r.nroOrden == nroOrden);
+    
+    if (index !== -1) { 
+        registros.splice(index, 1); // Eliminar el registro
+        localStorage.setItem('registros', JSON.stringify(registros)); // Guardar cambios
+        registrosFiltrados = [...registros]; // Actualizar la lista filtrada
+        mostrarRegistros(); // Refrescar la tabla
+    } else {
+        console.error("No se encontró el registro a eliminar:", nroOrden);
+    }
+}
+
+
+        document.getElementById('record-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const nroOrden = document.getElementById('nro-de-Orden').value;
+            const nombre = document.getElementById('nombre').value;
+            const dni = document.getElementById('dni').value;
+            const tipoTramite = document.getElementById('tipo-tramite').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const barrio = document.getElementById('barrio').value;
+            const nroTelefono = document.getElementById('nro-telefono').value;
+            const prioridad = document.getElementById('prioridad').value;
+            const coordinador = document.getElementById('coordinador').value;
+
+            const nuevoRegistro = {
+                fechaHora: new Date().toISOString(),
+                nroOrden,
+                nombre,
+                dni,
+                tipoTramite,
+                descripcion,
+                barrio,
+                nroTelefono,
+                prioridad,
+                coordinador
+            };
+
+            registros.push(nuevoRegistro);
+            localStorage.setItem('registros', JSON.stringify(registros));
+            registrosFiltrados = [...registros];
+            document.getElementById('record-form').reset();
+            mostrarRegistros();
+        });
+
+        document.getElementById('search-input').addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        document.getElementById('search-input').value = '';
+        registrosFiltrados = [...registros];
+        mostrarRegistros();
+    } else if (event.key === 'Enter') {
+        const searchTerm = event.target.value.toLowerCase();
+        if (searchTerm.trim() === '') {
+            registrosFiltrados = [...registros];
+        } else {
+            registrosFiltrados = registros.filter(record =>
+                Object.values(record).some(value => value.toString().toLowerCase().includes(searchTerm))
+            );
+        }
+        mostrarRegistros();
+    }
+});
+
+
+        document.getElementById('search-button').addEventListener('click', function() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            if (searchTerm.trim() === '') {
+                registrosFiltrados = [...registros];
+            } else {
+                registrosFiltrados = registros.filter(record =>
+                    Object.values(record).some(value => value.toString().toLowerCase().includes(searchTerm))
+                );
+            }
+
+            mostrarRegistros();
+        });
+
+        mostrarRegistros();
+        document.getElementById('logout-button').addEventListener('click', function() {
+    // Eliminar datos de sesión (si estás usando localStorage)
+    localStorage.removeItem('usuario');  // Ajusta 'usuario' al nombre que uses para almacenar los datos de sesión
+
+    // Redirigir al usuario a la página de inicio de sesión (ajusta la URL de acuerdo a tu aplicación)
+    window.location.href = 'login.html';  // Asegúrate de tener una página de inicio de sesión
+});
+
+    </script>
+    <div id="edit-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; border-radius: 8px; padding: 20px; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+        <h3>Editar Registro</h3>
+        <form id="edit-form">
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <input type="number" id="edit-nro-de-Orden" placeholder="Nro de Orden" required />
+                <input type="text" id="edit-nombre" placeholder="Nombre y Apellido" required />
+                <input type="number" id="edit-dni" placeholder="DNI" required />
+                <input type="text" id="edit-tipo-tramite" placeholder="Tipo de Trámite" required />
+                <input type="text" id="edit-descripcion" placeholder="Detalle o Descripción" />
+                <input type="text" id="edit-barrio" placeholder="Barrio" required />
+                <input type="number" id="edit-nro-telefono" placeholder="Nro Teléfono" required />
+                <select id="edit-prioridad" required>
+                    <option value="Urgente">Urgente</option>
+                    <option value="Moderado">Moderado</option>
+                    <option value="Normal">Normal</option>
+                </select>
+                <select id="edit-coordinador" required>
+                    <option value="Favio Diaz">Favio Diaz</option>
+                    <option value="Matias Plaza">Matias Plaza</option>
+                    <option value="Hernan Diaz">Hernan Diaz</option>
+                    <option value="Veronica Velardez">Veronica Velardez</option>
+                    <option value="Habilitacion ">Habilitacion</option>
+                    <option value="Personal ">Personal</option>
+                    <option value="Catastro ">Catastro</option>
+                </select>
+            </div>
+            <div style="margin-top: 10px; text-align: right;">
+                <button type="button" id="cancel-edit" style="margin-right: 10px; background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px;">Cancelar</button>
+                <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px;">Guardar</button>
+            </div>
+        </form>
+    </div>
+    <!-- MODAL PARA IMPRESIÓN -->
+<div id="print-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1000; width: 350px; text-align: center; font-family: Arial, sans-serif;">
+    <!-- Encabezado con Imagen -->
+    <div style="background-color: #007BFF; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+        <img src="1.png" alt="Encabezado" style="width: 80px; height: auto;">
+    </div>
+
+    <h3 style="color: #333; margin-top: 10px;">Detalles del Registro</h3>
+
+    <!-- Contenido del Modal -->
+    <div id="print-content" style="padding: 15px; text-align: left;">
+        <p><strong>📅 Fecha:</strong> <span id="print-fecha"></span></p>
+        <p><strong>📌 N° de Orden:</strong> <span id="print-nroOrden"></span></p>
+        <p><strong>👤 Nombre y Apellido:</strong> <span id="print-nombre"></span></p>
+        <p><strong>🆔 DNI:</strong> <span id="print-dni"></span></p>
+        <p><strong>📝 Detalle:</strong> <span id="print-detalle"></span></p>
+        <div class="separator"></div> <!-- Línea punteada -->
+
+    </div>
+
+    <!-- Botones -->
+    <div style="margin-top: 15px;">
+        <button onclick="imprimirDatos()" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🖨️ Imprimir</button>
+        <button onclick="cerrarModal()" style="background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">❌ Cerrar</button>
+    </div>
+</div>
+
+
+    
+</body>
+</html>

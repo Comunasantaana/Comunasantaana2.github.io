@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Personas y Trámites</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="2.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url('1.PNG');
+            background-size: center;
+            background-position: contain;
+        }
+        header {
+            background-color: #429edc;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 4.5rem;
+            font-weight: 'Arial', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        header img {
+            height: 60px;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            background-color: #0094D2;
+            padding: 10px;
+        }
+        .nav-bar button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .nav-bar button:hover {
+            background-color: #004481;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            min-width: 250px;
+            border-radius: 5px;
+        }
+        .dropdown-content div {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .dropdown-content div:last-child {
+            border-bottom: none;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .menu-content {
+            margin-top: 10px;
+        }
+        .info-text {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #004481;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .menu {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 0;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .menu h2 {
+            background-color: #0073cf;
+            color: white;
+            padding: 10px;
+            margin: 0;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .menu div {
+            padding: 15px;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="2.png" alt="Logo 1">
+        Comuna Santa Ana
+        <img src="ministerio.png" alt="Logo 2">
+    </header>
+    <button class="logout-button" onclick="window.location.href='logout.html'">Cerrar Sesión</button>
+    <div class="container">
+        <p class="info-text">Seleccione una opción del menú para comenzar.</p>
+    </div>
+    <div class="nav-bar">
+        <button onclick="window.location.href='Mesa de Entrada.html'">Mesa de Entrada</button>
+        <button onclick="window.location.href='Catastro.html'">Catastro</button>
+        <div class="dropdown">
+            <button>Personas y Trámites</button>
+            <div class="dropdown-content">
+                <div class="menu">
+                    <h2>Búsqueda / Alta de Persona</h2>
+                    <div>
+                        <input type="text" id="dniPersona" placeholder="Ingrese DNI">
+                        <button onclick="buscarPersona()">Buscar Persona</button>
+                    </div>
+                </div>
+                <div class="menu">
+                    <h2>Búsqueda / Alta de Trámite</h2>
+                    <div>
+                        <input type="text" id="dniTramite" placeholder="Ingrese DNI">
+                        <button onclick="buscarTramite()">Buscar Trámite</button>
+                    </div>
+                </div>
+                <div class="menu">
+                    <h2>Consulta de Trámites</h2>
+                    <div>
+                        <input type="text" id="dniConsulta" placeholder="Ingrese DNI">
+                        <button onclick="consultarTramites()">Consultar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>&copy; Comuna Rural Santa Ana 2024 - Ingenio del Conocimiento</footer>
+</body>
+</html>
